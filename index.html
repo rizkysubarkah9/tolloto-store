@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tolloto Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .store-container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #007acc;
+    }
+    .product {
+      border: 2px solid #ffcc00;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      background: #e6f7ff;
+    }
+    .product h2 {
+      margin: 0;
+      color: #005999;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .controls button {
+      background: #ffcc00;
+      border: none;
+      padding: 8px 12px;
+      margin: 0 5px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 6px;
+      color: #000;
+      font-weight: bold;
+    }
+    .controls span {
+      font-size: 16px;
+      font-weight: bold;
+      min-width: 30px;
+      text-align: center;
+      display: inline-block;
+    }
+    .total {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #005999;
+    }
+    .btn-checkout {
+      display: block;
+      width: 100%;
+      background: #007acc;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-checkout:hover {
+      background: #005999;
+    }
+    .payment-info {
+      margin-top: 15px;
+      text-align: center;
+      font-size: 14px;
+      background: #fffbe6;
+      padding: 10px;
+      border: 1px solid #ffcc00;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="store-container">
+    <h1>🔥 Tolloto Store 🔥</h1>
+
+    <!-- Produk 1 -->
+    <div class="product">
+      <h2>Joki AFK (Rp 15.000 / Hari)</h2>
+      <div class="controls">
+        <button onclick="updateQty('afk', -1)">-</button>
+        <span id="qty-afk">0</span>
+        <button onclick="updateQty('afk', 1)">+</button>
+      </div>
+      <p>Total: Rp <span id="total-afk">0</span></p>
+    </div>
+
+    <!-- Produk 2 -->
+    <div class="product">
+      <h2>Enchant Stone (Rp 1.000 / 10 biji)</h2>
+      <div class="controls">
+        <button onclick="updateQty('stone', -1)">-</button>
+        <span id="qty-stone">0</span>
+        <button onclick="updateQty('stone', 1)">+</button>
+      </div>
+      <p>Total: Rp <span id="total-stone">0</span></p>
+    </div>
+
+    <!-- Total Semua -->
+    <div class="total">
+      Total Semua: Rp <span id="grand-total">0</span>
+    </div>
+
+    <!-- Tombol Checkout -->
+    <button class="btn-checkout" onclick="checkout()">
+      Checkout via WhatsApp
+    </button>
+
+    <!-- Info Pembayaran -->
+    <div class="payment-info">
+      💳 Pembayaran via DANA: <b>085156222829</b><br>
+      📱 WhatsApp: <b>085156222829</b>
+    </div>
+  </div>
+
+  <script>
+    let qtyAfk = 0;
+    let qtyStone = 0;
+
+    function updateQty(product, change) {
+      if (product === 'afk') {
+        qtyAfk = Math.max(0, qtyAfk + change);
+      } else if (product === 'stone') {
+        qtyStone = Math.max(0, qtyStone + change);
+      }
+      renderTotals();
+    }
+
+    function renderTotals() {
+      const priceAfk = 15000;
+      const priceStone = 1000;
+
+      const totalAfk = qtyAfk * priceAfk;
+      const totalStone = qtyStone * priceStone;
+      const grandTotal = totalAfk + totalStone;
+
+      document.getElementById("qty-afk").innerText = qtyAfk;
+      document.getElementById("total-afk").innerText = totalAfk.toLocaleString();
+
+      document.getElementById("qty-stone").innerText = qtyStone;
+      document.getElementById("total-stone").innerText = totalStone.toLocaleString();
+
+      document.getElementById("grand-total").innerText = grandTotal.toLocaleString();
+    }
+
+    function checkout() {
+      const waNumber = "6285156222829"; // nomor WA format internasional
+      const priceAfk = 15000;
+      const priceStone = 1000;
+
+      const totalAfk = qtyAfk * priceAfk;
+      const totalStone = qtyStone * priceStone;
+      const grandTotal = totalAfk + totalStone;
+
+      if (grandTotal === 0) {
+        alert("Pilih produk dulu sebelum checkout!");
+        return;
+      }
+
+      let message = "Halo Tolloto Store, saya mau order:%0A";
+      if (qtyAfk > 0) message += `- Joki AFK: ${qtyAfk} hari = Rp ${totalAfk.toLocaleString()}%0A`;
+      if (qtyStone > 0) message += `- Enchant Stone: ${qtyStone * 10} biji = Rp ${totalStone.toLocaleString()}%0A`;
+      message += `Total: Rp ${grandTotal.toLocaleString()}%0A`;
+      message += "Metode pembayaran: DANA (085156222829)";
+
+      window.open(`https://wa.me/${waNumber}?text=${message}`, "_blank");
+    }
+  </script>
+</body>
+</html>
